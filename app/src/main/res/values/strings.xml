@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Tripick</string>
+    <string name="home">홈</string>
+    <string name="map">지도</string>
+    <string name="record">여행기록</string>
+</resources>
