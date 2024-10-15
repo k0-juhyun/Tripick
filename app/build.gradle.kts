@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -50,7 +51,15 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.0.2")
     implementation("com.google.android.gms:play-services-location:19.0.1")
 
+    implementation ("com.github.bumptech.glide:glide:4.12.0") // Glide 라이브러리 추가
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0") // Glide 컴파일러 추가
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("androidx.sqlite:sqlite:2.1.0")
+    implementation ("androidx.viewpager2:viewpager2:1.1.0")
 }

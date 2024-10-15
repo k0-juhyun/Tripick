@@ -3,4 +3,5 @@
     <string name="home">홈</string>
     <string name="map">지도</string>
     <string name="record">여행기록</string>
+    <string name="trip_image">여행 이미지</string>
 </resources>
