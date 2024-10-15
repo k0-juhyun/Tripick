@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/backgroundColor"
+    android:layout_height="match_parent">
+
+    <!-- 여행 기록이 없을 때 보여줄 메시지 -->
+    <TextView
+        android:id="@+id/textNoTrips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="여행 기록이 없습니다."
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

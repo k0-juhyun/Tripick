@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="customEditTextFontStyle" parent="@android:style/Widget.DeviceDefault.EditText">
+        <item name="android:fontFamily">@font/defaultfont</item>
+    </style>
+
+    <style name="customTextViewFontStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">@font/defaultfont</item>
+    </style>
+
+    <style name="customButtonFontStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:fontFamily">@font/defaultfont</item>
+    </style>
+
+    <style name="customRadioButtonFontStyle" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="android:fontFamily">@font/defaultfont</item>
+    </style>
+
+    <style name="customCheckboxFontStyle" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+        <item name="android:fontFamily">@font/defaultfont</item>
+    </style>
+
+
+</resources>

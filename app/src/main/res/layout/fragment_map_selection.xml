@@ -1,0 +1,21 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mapLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 버튼을 지도 위에 추가할 레이아웃 -->
+    <Button
+        android:id="@+id/selectLocationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="지역 선택 완료"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="gone" /> <!-- 처음에는 숨김 -->
+</FrameLayout>

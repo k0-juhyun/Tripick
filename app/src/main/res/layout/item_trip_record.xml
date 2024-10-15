@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:strokeColor="@android:color/darker_gray"
+    app:strokeWidth="1dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/mainImage"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/tripDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:layout_alignParentTop="true"
+            android:layout_margin="8dp" />
+
+        <TextView
+            android:id="@+id/tripTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:layout_below="@id/tripDate"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/tripStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tripEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            android:layout_below="@id/tripStartDate"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 제목의 일부와 ~ 기호를 이미지 위에 배치 -->
+        <TextView
+            android:id="@+id/tripTitleOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="30dp" />
+
+        <TextView
+            android:id="@+id/tripDateOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            android:layout_toRightOf="@id/tripTitleOverlay"
+            android:layout_alignBaseline="@id/tripTitleOverlay"
+            android:layout_marginStart="4dp" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
