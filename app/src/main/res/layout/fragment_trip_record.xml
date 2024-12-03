@@ -19,11 +19,11 @@
         android:id="@+id/editTextTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/customEditTextFontStyle"
         android:hint="여행 제목을 입력하세요"
         android:textColor="@color/white"
-        android:background="@android:color/darker_gray"
+        android:textColorHint="@color/white"
         android:padding="8dp"
+        style="@style/customButtonFontStyle"
         android:layout_marginBottom="16dp"
         android:inputType="text" />
 
@@ -35,14 +35,14 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
+
     <Button
         android:id="@+id/buttonSelectDates"
         android:backgroundTint="@color/buttonColor"
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue"
-        style="@style/customButtonFontStyle"
+        android:textColor="@color/white"
         android:text="날짜 선택" />
 
     <!-- 이미지 추가 버튼 -->
@@ -61,41 +61,14 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/buttonAddLargeImage"
-            android:layout_width="0dp"
+            android:id="@+id/buttonAddImages"
+            android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_weight="1"
-            android:text="대표 사진"
+            android:text="사진 추가"
             style="@style/customButtonFontStyle"
             android:backgroundTint="@color/blue"
             android:textColor="@android:color/white"
             android:layout_marginEnd="8dp" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/buttonAddSmallImage1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="사진 추가"
-                style="@style/customButtonFontStyle"
-                android:backgroundTint="@color/blue"
-                android:textColor="@color/white"
-                android:layout_marginBottom="8dp" />
-
-            <Button
-                android:id="@+id/buttonAddSmallImage2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="사진 추가"
-                style="@style/customButtonFontStyle"
-                android:backgroundTint="@color/blue"
-                android:textColor="@color/white" />
-        </LinearLayout>
     </LinearLayout>
 
     <!-- 여행지 선택 버튼 -->
@@ -113,7 +86,7 @@
         android:layout_height="wrap_content"
         android:text="여행지 선택하기"
         style="@style/customButtonFontStyle"
-        android:textColor="@color/blue"
+        android:textColor="@color/white"
         android:backgroundTint="@color/buttonColor"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
@@ -132,9 +105,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="일기를 입력하세요"
-        style="@style/customEditTextFontStyle"
+        style="@style/customButtonFontStyle"
         android:textColor="@color/white"
-        android:background="@android:color/darker_gray"
+        android:textColorHint="@color/white"
         android:padding="8dp"
         android:layout_marginBottom="16dp"
         android:inputType="textMultiLine" />

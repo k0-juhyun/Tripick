@@ -21,19 +21,15 @@ class TripRecordFragment : Fragment() {
     private lateinit var buttonSelectDates: Button
     private lateinit var buttonSelectLocation: Button
     private lateinit var buttonAddTrip: Button
-    private lateinit var buttonAddLargeImage: Button
-    private lateinit var buttonAddSmallImage1: Button
-    private lateinit var buttonAddSmallImage2: Button
+    private lateinit var buttonAddImages: Button
     private var selectedStartDate: String = ""
     private var selectedEndDate: String = ""
     private var selectedLocation: LatLng? = null // 선택한 위치 저장
     private lateinit var tripRepository: TripRepository
-    private var selectedImageUri: Uri? = null // 선택된 이미지 URI 저장
+    private var selectedImageUris: MutableList<Uri> = mutableListOf() // 선택된 이미지 URI 저장
 
     companion object {
-        const val REQUEST_CODE_LARGE_IMAGE = 1
-        const val REQUEST_CODE_SMALL_IMAGE_1 = 2
-        const val REQUEST_CODE_SMALL_IMAGE_2 = 3
+        const val REQUEST_CODE_IMAGE_PICK = 1
     }
 
     override fun onCreateView(
@@ -47,11 +43,7 @@ class TripRecordFragment : Fragment() {
         buttonSelectDates = view.findViewById(R.id.buttonSelectDates)
         buttonSelectLocation = view.findViewById(R.id.buttonSelectLocation)
         buttonAddTrip = view.findViewById(R.id.buttonAddRecord)
-
-        // 이미지 추가 버튼 초기화
-        buttonAddLargeImage = view.findViewById(R.id.buttonAddLargeImage)
-        buttonAddSmallImage1 = view.findViewById(R.id.buttonAddSmallImage1)
-        buttonAddSmallImage2 = view.findViewById(R.id.buttonAddSmallImage2)
+        buttonAddImages = view.findViewById(R.id.buttonAddImages)
 
         tripRepository = TripRepository(requireContext())
 
@@ -67,18 +59,8 @@ class TripRecordFragment : Fragment() {
             addTripRecord()
         }
 
-        // 큰 이미지 추가 버튼 클릭 리스너
-        buttonAddLargeImage.setOnClickListener {
-            openGalleryForImageSelection(REQUEST_CODE_LARGE_IMAGE)
-        }
-
-        // 작은 이미지 추가 버튼 클릭 리스너
-        buttonAddSmallImage1.setOnClickListener {
-            openGalleryForImageSelection(REQUEST_CODE_SMALL_IMAGE_1)
-        }
-
-        buttonAddSmallImage2.setOnClickListener {
-            openGalleryForImageSelection(REQUEST_CODE_SMALL_IMAGE_2)
+        buttonAddImages.setOnClickListener {
+            openGalleryForImageSelection()
         }
 
         return view
@@ -91,9 +73,8 @@ class TripRecordFragment : Fragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            // 선택된 시작 날짜 포맷 설정
             selectedStartDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            buttonSelectDates.text = "$selectedStartDate ~ 종료 날짜 선택" // 버튼 텍스트 업데이트
+            buttonSelectDates.text = "$selectedStartDate ~ 종료 날짜 선택"
             showEndDatePickerDialog()
         }, year, month, day).show()
     }
@@ -105,15 +86,13 @@ class TripRecordFragment : Fragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            // 선택된 종료 날짜 포맷 설정
             val selectedEndDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
 
-            // 날짜 비교
             if (isStartDateAfterEndDate(selectedStartDate, selectedEndDate)) {
                 Toast.makeText(requireContext(), "종료 날짜는 시작 날짜 이후여야 합니다.", Toast.LENGTH_SHORT).show()
             } else {
-                this.selectedEndDate = selectedEndDate // 종료 날짜 저장
-                buttonSelectDates.text = "$selectedStartDate ~ $selectedEndDate" // 버튼 텍스트 업데이트
+                this.selectedEndDate = selectedEndDate
+                buttonSelectDates.text = "$selectedStartDate ~ $selectedEndDate"
             }
         }, year, month, day).show()
     }
@@ -129,7 +108,7 @@ class TripRecordFragment : Fragment() {
             set(endParts[0], endParts[1] - 1, endParts[2]) // 월은 0부터 시작
         }
 
-        return startCalendar.after(endCalendar) // 시작 날짜가 종료 날짜 이후인지 확인
+        return startCalendar.after(endCalendar)
     }
 
     private fun showMapSelection() {
@@ -144,14 +123,13 @@ class TripRecordFragment : Fragment() {
         val title = editTextTitle.text.toString()
         val details = editTextDetails.text.toString()
         val location = selectedLocation?.let { "${it.latitude}, ${it.longitude}" } ?: "위치 없음"
-        val imageUri = selectedImageUri?.toString() ?: "" // 선택된 이미지 URI 설정
+        val imageUris = selectedImageUris.joinToString(",") // 선택된 이미지 URI 설정
 
-        // 새로운 여행 기록 생성
         val newTripRecord = TripRecord(
             title = title,
             details = details,
             location = location,
-            imageUri = imageUri,
+            imageUri = imageUris,
             startDate = selectedStartDate,
             endDate = selectedEndDate // 종료 날짜 추가
         )
@@ -165,32 +143,44 @@ class TripRecordFragment : Fragment() {
         editTextDetails.text.clear()
         buttonSelectDates.text = "날짜 선택하기"
         selectedLocation = null // 선택한 위치 초기화
-        selectedImageUri = null // 선택한 이미지 URI 초기화
+        selectedImageUris.clear() // 선택한 이미지 URI 초기화
     }
 
-    private fun openGalleryForImageSelection(requestCode: Int) {
-        val intent = Intent(Intent.ACTION_PICK)
+    private fun openGalleryForImageSelection() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "image/*" // 모든 이미지 파일을 선택
-        startActivityForResult(intent, requestCode)
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 여러 선택 허용
+        startActivityForResult(intent, REQUEST_CODE_IMAGE_PICK)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && data != null) {
-            selectedImageUri = data.data
-            // 선택한 이미지 URI에 대한 추가 처리 (예: UI 업데이트)
-            when (requestCode) {
-                REQUEST_CODE_LARGE_IMAGE -> {
-                    // 큰 이미지 추가 처리
-                    Toast.makeText(requireContext(), "큰 이미지가 선택되었습니다.", Toast.LENGTH_SHORT).show()
-                }
-                REQUEST_CODE_SMALL_IMAGE_1 -> {
-                    // 작은 이미지 1 추가 처리
-                    Toast.makeText(requireContext(), "작은 이미지 1이 선택되었습니다.", Toast.LENGTH_SHORT).show()
-                }
-                REQUEST_CODE_SMALL_IMAGE_2 -> {
-                    // 작은 이미지 2 추가 처리
-                    Toast.makeText(requireContext(), "작은 이미지 2가 선택되었습니다.", Toast.LENGTH_SHORT).show()
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_IMAGE_PICK) {
+                // 여러 이미지 선택
+                data?.let {
+                    if (it.clipData != null) {
+                        val count = it.clipData!!.itemCount
+                        for (i in 0 until count) {
+                            if (selectedImageUris.size < 3) { // 최대 3개 이미지 선택
+                                val imageUri = it.clipData!!.getItemAt(i).uri
+                                imageUri?.let { uri -> // null 체크 후 추가
+                                    selectedImageUris.add(uri)
+                                    // 선택한 이미지 URI에 대한 추가 처리 (예: UI 업데이트)
+                                }
+                            } else {
+                                Toast.makeText(requireContext(), "최대 3개의 이미지만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
+                                break
+                            }
+                        }
+                    } else if (it.data != null) {
+                        // 단일 이미지 선택
+                        val imageUri = it.data
+                        imageUri?.let { uri -> // null 체크 후 추가
+                            selectedImageUris.add(uri)
+                            // 선택한 이미지 URI에 대한 추가 처리 (예: UI 업데이트)
+                        }
+                    }
                 }
             }
         }
