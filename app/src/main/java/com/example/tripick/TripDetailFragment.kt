@@ -12,11 +12,31 @@ import com.bumptech.glide.Glide
 
 class TripDetailFragment : Fragment() {
     private var tripId: Long = 0 // 여행 기록 ID
+
+    companion object {
+        private const val ARG_TRIP_ID = "trip_id"
+
+        fun newInstance(tripId: Long): TripDetailFragment {
+            val fragment = TripDetailFragment()
+            val args = Bundle()
+            args.putLong(ARG_TRIP_ID, tripId)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     private lateinit var viewPager: ViewPager // ViewPager 초기화
     private lateinit var tripTitle: TextView // 여행 제목
     private lateinit var tripStartDate: TextView // 시작 날짜
     private lateinit var tripEndDate: TextView // 종료 날짜
     private lateinit var tripDetails: TextView // 여행 일기
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            tripId = it.getLong(ARG_TRIP_ID)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +77,7 @@ class TripDetailFragment : Fragment() {
         return view
     }
 
-    private fun loadTripDetails(view: View) {
+    fun loadTripDetails(view: View) {
         val tripRepository = TripRepository(requireContext())
         val tripRecord = tripRepository.getTripById(tripId) // 여행 기록 가져오기
 

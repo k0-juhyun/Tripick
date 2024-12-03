@@ -9,7 +9,8 @@ class TripRepository(private val context: Context) {
     private val dbHelper = TripDatabase(context)
 
     // 여행 기록 추가
-    fun insertTrip(tripRecord: TripRecord) {
+    // 여행 기록 추가
+    fun insertTrip(tripRecord: TripRecord): Long {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("title", tripRecord.title)
@@ -19,8 +20,10 @@ class TripRepository(private val context: Context) {
             put("startDate", tripRecord.startDate)
             put("endDate", tripRecord.endDate)
         }
-        db.insert(TripDatabase.TABLE_TRIPS, null, values)
+        // 삽입 후 생성된 ID 반환
+        val id = db.insert(TripDatabase.TABLE_TRIPS, null, values)
         db.close() // 데이터베이스 닫기
+        return id // 생성된 ID 반환
     }
 
     // 모든 여행 기록 가져오기

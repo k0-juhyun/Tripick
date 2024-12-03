@@ -1,9 +1,12 @@
 package com.example.tripick
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +16,7 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var tripAdapter: TripAdapter
     private lateinit var textNoTrips: TextView // 여행 기록이 없을 때 사용할 TextView
+    private lateinit var editTextSearch: EditText // 검색 바
     private val tripRecords: MutableList<TripRecord> = mutableListOf()
 
     override fun onCreateView(
@@ -23,6 +27,8 @@ class HomeFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
         textNoTrips = view.findViewById(R.id.textNoTrips) // TextView 초기화
+        editTextSearch = view.findViewById(R.id.editTextSearch) // 검색 바 초기화
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         tripAdapter = TripAdapter(tripRecords, { tripRecord ->
@@ -36,10 +42,21 @@ class HomeFragment : Fragment() {
         // 데이터베이스에서 기존 여행 기록 불러오기
         loadTrips()
 
+        // 검색 바에 텍스트 변경 리스너 추가
+        editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterTrips(s.toString()) // 입력된 텍스트에 따라 필터링
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         return view
     }
 
-    fun loadTrips() {
+    public fun loadTrips() {
         val tripRepository = TripRepository(requireContext())
         val trips = tripRepository.getAllTrips() // 데이터베이스에서 모든 여행 기록 가져오기
         tripRecords.clear() // 기존 리스트 초기화
@@ -56,9 +73,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showTripDetails(tripRecord: TripRecord) {
-        val tripDetailFragment = TripDetailFragment()
-        tripDetailFragment.setTripId(tripRecord.id) // 여행 기록 ID 전달
-
+        val tripDetailFragment = TripDetailFragment.newInstance(tripRecord.id) // 여행 기록 ID 전달
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, tripDetailFragment)
             .addToBackStack(null)
@@ -72,6 +87,22 @@ class HomeFragment : Fragment() {
             loadTrips() // 리스트 갱신
         } catch (e: Exception) {
             e.printStackTrace() // 로그로 오류 출력
+        }
+    }
+
+    // 필터링 메서드 추가
+    private fun filterTrips(query: String) {
+        val filteredList = tripRecords.filter {
+            it.title.contains(query, ignoreCase = true) ||
+                    it.details.contains(query, ignoreCase = true)
+        }
+        tripAdapter.filterList(filteredList) // 어댑터에 필터링된 리스트 전달
+
+        // 검색 결과가 없는 경우 메시지 표시
+        if (filteredList.isEmpty()) {
+            textNoTrips.visibility = View.VISIBLE
+        } else {
+            textNoTrips.visibility = View.GONE
         }
     }
 }

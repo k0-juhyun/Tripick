@@ -130,6 +130,7 @@ class TripRecordFragment : Fragment() {
         val imageUris = selectedImageUris.joinToString(",") // 선택된 이미지 URI 설정
 
         val newTripRecord = TripRecord(
+            id = 0, // 초기값 설정, 나중에 데이터베이스에서 ID를 가져올 것
             title = title,
             details = details,
             location = location,
@@ -138,7 +139,8 @@ class TripRecordFragment : Fragment() {
             endDate = selectedEndDate // 종료 날짜 추가
         )
 
-        tripRepository.insertTrip(newTripRecord)
+        // 여행 기록 추가 및 ID 가져오기
+        val tripId = tripRepository.insertTrip(newTripRecord) // ID 반환 받기
 
         Toast.makeText(requireContext(), "여행 기록이 추가되었습니다.", Toast.LENGTH_SHORT).show()
 
@@ -149,8 +151,12 @@ class TripRecordFragment : Fragment() {
         selectedLocation = null // 선택한 위치 초기화
         selectedImageUris.clear() // 선택한 이미지 URI 초기화
 
-        // ViewPager 업데이트
-        setupImagePager(emptyList()) // 초기화 후 빈 리스트로 설정
+        // TripDetailFragment로 이동
+        val detailFragment = TripDetailFragment.newInstance(tripId)
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, detailFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun openGalleryForImageSelection() {

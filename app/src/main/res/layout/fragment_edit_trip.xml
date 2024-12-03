@@ -15,8 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="여행 제목"
-            style="@style/customButtonFontStyle"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
 
@@ -25,8 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="여행 제목을 입력하세요"
-            style="@style/customButtonFontStyle"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:padding="8dp"
             android:layout_marginBottom="16dp" />
 
@@ -35,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="여행 날짜"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
 
@@ -45,8 +43,7 @@
             android:layout_height="wrap_content"
             android:text="여행 날짜 선택"
             android:padding="8dp"
-            android:textColor="@color/white"
-            style="@style/customButtonFontStyle"
+            android:textColor="@color/black"
             android:backgroundTint="@color/buttonColor"
             android:layout_marginBottom="16dp" />
 
@@ -62,8 +59,7 @@
             android:layout_height="wrap_content"
             android:text="사진 수정"
             android:padding="8dp"
-            android:textColor="@color/white"
-            style="@style/customButtonFontStyle"
+            android:textColor="@color/black"
             android:backgroundTint="@color/buttonColor"
             android:layout_marginBottom="16dp" />
 
@@ -72,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="여행 일기"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
 
@@ -82,8 +78,7 @@
             android:layout_height="wrap_content"
             android:hint="여러분의 일기를 입력해주세요."
             android:padding="8dp"
-            android:textColor="@color/white"
-            style="@style/customButtonFontStyle"
+            android:textColor="@color/black"
             android:layout_marginBottom="16dp"
             android:inputType="textMultiLine"
             android:gravity="top|start"
@@ -94,8 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="여행지"
-            android:textColor="@color/white"
-            style="@style/customButtonFontStyle"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
 
@@ -103,9 +97,8 @@
             android:id="@+id/editTextLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/customButtonFontStyle"
             android:hint="여행 위치를 입력하세요"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:padding="8dp"
             android:layout_marginBottom="16dp" />
 
@@ -121,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="저장하기"
-                style="@style/customButtonFontStyle"
+                android:textColor="@color/black"
                 android:backgroundTint="@color/buttonColor" />
 
             <Button
@@ -130,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="뒤로가기"
-                style="@style/customButtonFontStyle"
+                android:textColor="@color/black"
                 android:backgroundTint="@color/buttonColor" />
         </LinearLayout>
     </LinearLayout>

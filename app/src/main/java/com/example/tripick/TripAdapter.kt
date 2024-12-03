@@ -9,10 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide // Glide 라이브러리 사용
 
 class TripAdapter(
-    private val tripRecords: List<TripRecord>, // 여행 기록 리스트
+    private var tripRecords: List<TripRecord>, // 여행 기록 리스트
     private val onItemClick: (TripRecord) -> Unit, // 항목 클릭 리스너
     private val onDeleteClick: (Long) -> Unit // 삭제 클릭 리스너
 ) : RecyclerView.Adapter<TripAdapter.TripViewHolder>() {
+
+    private var tripRecordsFull: List<TripRecord> = ArrayList(tripRecords) // 전체 여행 기록 리스트
 
     inner class TripViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val mainImage: ImageView = itemView.findViewById(R.id.mainImage)
@@ -66,11 +68,15 @@ class TripAdapter(
         }
     }
 
-
-
     override fun getItemCount(): Int = tripRecords.size
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) 0 else 1 // 최상단 블록은 0, 나머지는 1로 구분
+    }
+
+    // 필터링 기능 추가
+    fun filterList(filteredTrips: List<TripRecord>) {
+        tripRecords = filteredTrips
+        notifyDataSetChanged()
     }
 }

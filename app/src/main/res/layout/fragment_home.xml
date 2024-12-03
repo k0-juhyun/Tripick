@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/backgroundColor"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="검색어를 입력하세요."
+        android:padding="8dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:background="@drawable/search_background"
+        android:drawablePadding="8dp" />
+
+    <ImageView
+        android:id="@+id/imageViewSearch"
+        android:layout_width="2dp"
+        android:layout_height="2dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_search" />
 
     <!-- 여행 기록이 없을 때 보여줄 메시지 -->
     <TextView
@@ -18,5 +37,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/editTextSearch"/>
 </RelativeLayout>
