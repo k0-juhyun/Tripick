@@ -1,5 +1,8 @@
 package com.example.tripick
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -11,11 +14,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.maps.model.LatLng
 import java.util.Calendar
+import androidx.fragment.app.setFragmentResultListener
 
 class TripRecordFragment : Fragment() {
     private lateinit var editTextTitle: EditText
@@ -33,6 +38,7 @@ class TripRecordFragment : Fragment() {
 
     companion object {
         const val REQUEST_CODE_IMAGE_PICK = 1
+        const val REQUEST_LOCATION_PERMISSION = 2
     }
 
     override fun onCreateView(
@@ -51,6 +57,8 @@ class TripRecordFragment : Fragment() {
 
         tripRepository = TripRepository(requireContext())
 
+        checkLocationPermission()
+
         buttonSelectDates.setOnClickListener {
             showStartDatePickerDialog()
         }
@@ -68,6 +76,21 @@ class TripRecordFragment : Fragment() {
         }
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // FragmentResultListener 설정
+        setFragmentResultListener("requestKey") { requestKey, bundle ->
+            val latitude = bundle.getDouble("latitude")
+            val longitude = bundle.getDouble("longitude")
+            selectedLocation = LatLng(latitude, longitude)
+
+            // 선택한 위치를 사용하여 UI 업데이트
+            Toast.makeText(requireContext(), "위치가 선택되었습니다: $latitude, $longitude", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun showStartDatePickerDialog() {
@@ -99,6 +122,37 @@ class TripRecordFragment : Fragment() {
                 buttonSelectDates.text = "$selectedStartDate ~ $selectedEndDate"
             }
         }, year, month, day).show()
+    }
+
+    private fun checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            // 권한이 없을 경우 요청
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION_PERMISSION
+            )
+        } else {
+            // 권한이 이미 허용된 경우
+            // 필요한 작업 수행 (예: 지도 초기화)
+        }
+    }
+
+    // 권한 요청 결과 처리
+    override fun onRequestPermissionsResult(
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                // 권한이 허용되었을 경우
+                // 필요한 작업 수행 (예: 지도 초기화)
+            } else {
+                // 권한이 거부되었을 경우
+                Toast.makeText(requireContext(), "위치 권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun isStartDateAfterEndDate(startDate: String, endDate: String): Boolean {

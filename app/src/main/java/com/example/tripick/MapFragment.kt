@@ -21,23 +21,21 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_map, container, false)
+        val view = inflater.inflate(R.layout.fragment_map_selection, container, false)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        mapFragment.getMapAsync(this) // 비동기 호출
         return view
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+        this.map = googleMap
 
-        // 예시: 여행지에 마커 추가
-        addMarker("여행지 제목", "여행지 상세", LatLng(37.5665, 126.978)) // 서울
+        // 초기 위치 설정
+        val initialLocation = LatLng(37.5665, 126.978) // 서울
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
 
-        // 추가한 마커 클릭 리스너
-        map.setOnMarkerClickListener { marker ->
-            // 클릭 시 해당 여행 기록 보기 로직
-            true
-        }
+        // 예시: 마커 추가
+        map.addMarker(MarkerOptions().position(initialLocation).title("서울"))
     }
 
     private fun addMarker(title: String, snippet: String, location: LatLng) {

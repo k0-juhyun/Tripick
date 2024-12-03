@@ -46,7 +46,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.viewpager:viewpager:1.0.0")
-
+    implementation("androidx.fragment:fragment-ktx:1.5.0")
+    implementation("androidx.core:core-ktx:1.9.0")
     implementation(libs.androidx.viewpager2)
 
     implementation("com.google.android.gms:play-services-maps:18.0.2")

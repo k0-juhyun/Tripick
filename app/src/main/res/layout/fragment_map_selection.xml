@@ -10,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- 버튼을 지도 위에 추가할 레이아웃 -->
     <Button
         android:id="@+id/selectLocationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="지역 선택 완료"
+        android:text="지역 선택 완료22222222"
+        android:textColor="@color/black"
         android:layout_gravity="bottom|center_horizontal"
         android:visibility="gone" /> <!-- 처음에는 숨김 -->
 </FrameLayout>

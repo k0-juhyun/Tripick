@@ -13,6 +13,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import androidx.fragment.app.setFragmentResult
 
 class MapSelectionFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
@@ -31,32 +32,28 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
         // 버튼 초기화
         button = view.findViewById(R.id.selectLocationButton)
         button.setOnClickListener {
-            // selectedLocation이 null인지 확인
             if (selectedLocation == null) {
                 Toast.makeText(requireContext(), "위치를 선택하세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // MainActivity를 안전하게 참조
-            val mainActivity = activity as? MainActivity
-            if (mainActivity != null) {
-                // 선택한 위치를 TripRecordFragment에 전달
-                val tripRecordFragment = TripRecordFragment().apply {
-                    arguments = Bundle().apply {
-                        putString("title", mainActivity.getCurrentTitle())
-                        putString("details", mainActivity.getCurrentDetails())
-                        putString("startDate", mainActivity.getCurrentStartDate())
-                        putString("endDate", mainActivity.getCurrentEndDate())
-                        putParcelable("location", LatLngWrapper.fromLatLng(selectedLocation!!)) // LatLng를 Wrapper로 변환
-                    }
-                }
-
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, tripRecordFragment)
-                    .addToBackStack(null)
-                    .commit()
+            // 선택한 위치를 FragmentResult로 설정
+            val result = Bundle().apply {
+                putString("location_title", "선택한 위치")
+                putDouble("latitude", selectedLocation!!.latitude)
+                putDouble("longitude", selectedLocation!!.longitude)
             }
+
+            setFragmentResult("requestKey", result)
+
+            // TripRecordFragment로 전환
+            val tripRecordFragment = TripRecordFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, tripRecordFragment)
+                .addToBackStack(null)
+                .commit()
         }
+
 
         return view
     }
@@ -70,14 +67,13 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
 
         // 클릭 시 마커 추가
         map.setOnMapClickListener { latLng ->
-            // 기존 마커 제거
-            map.clear()
-            // 새로운 마커 추가
-            selectedLocation = latLng
+            map.clear() // 기존 마커 제거
+            selectedLocation = latLng // 새로운 위치 저장
             map.addMarker(MarkerOptions().position(latLng).title("선택한 위치"))
 
             // 버튼 보이기
             button.visibility = View.VISIBLE
         }
+
     }
 }
