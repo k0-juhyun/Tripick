@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.viewpager:viewpager:1.0.0")
 
     implementation(libs.androidx.viewpager2)
 

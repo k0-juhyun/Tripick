@@ -1,15 +1,19 @@
 package com.example.tripick
 
 import android.app.DatePickerDialog
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import java.util.Calendar
 
 class EditTripFragment : Fragment() {
@@ -19,9 +23,12 @@ class EditTripFragment : Fragment() {
     private lateinit var editTextLocation: EditText // 위치 입력 필드
     private lateinit var buttonSelectDates: Button // 날짜 선택 버튼
     private lateinit var buttonSave: Button
-    private lateinit var tripImage: ImageView
+    private lateinit var viewPager: ViewPager // ViewPager 초기화
+    private lateinit var buttonEditImage: Button // 사진 수정 버튼
     private var selectedStartDate: String = ""
     private var selectedEndDate: String = ""
+    private val REQUEST_IMAGE_PICK = 1001 // 이미지 선택 요청 코드
+    private val selectedImageUris = mutableListOf<Uri>() // 선택된 이미지 URI 목록
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +42,8 @@ class EditTripFragment : Fragment() {
         editTextLocation = view.findViewById(R.id.editTextLocation) // 위치 필드 초기화
         buttonSelectDates = view.findViewById(R.id.buttonSelectDates) // 날짜 선택 버튼 초기화
         buttonSave = view.findViewById(R.id.buttonSave)
-        tripImage = view.findViewById(R.id.mainImage)
+        viewPager = view.findViewById(R.id.viewPager) // ViewPager 초기화
+        buttonEditImage = view.findViewById(R.id.buttonEditImage) // 사진 수정 버튼 초기화
 
         // 여행 기록 로드
         loadTripDetails()
@@ -50,6 +58,11 @@ class EditTripFragment : Fragment() {
             saveTripRecord()
         }
 
+        // 사진 수정 버튼 클릭 리스너
+        buttonEditImage.setOnClickListener {
+            openImagePicker()
+        }
+
         // 뒤로가기 버튼 클릭 리스너
         view.findViewById<Button>(R.id.buttonBack).setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
@@ -62,15 +75,27 @@ class EditTripFragment : Fragment() {
         val tripRepository = TripRepository(requireContext())
         val tripRecord = tripRepository.getTripById(tripId)
 
-        // UI 업데이트
-        editTextTitle.setText(tripRecord.title)
-        editTextDetails.setText(tripRecord.details)
-        editTextLocation.setText(tripRecord.location) // 위치 업데이트
-        selectedStartDate = tripRecord.startDate // 시작 날짜 업데이트
-        selectedEndDate = tripRecord.endDate // 종료 날짜 업데이트
+        // UI 업데이트 (null 체크 추가)
+        editTextTitle.setText(tripRecord.title ?: "")
+        editTextDetails.setText(tripRecord.details ?: "")
+        editTextLocation.setText(tripRecord.location ?: "")
+        selectedStartDate = tripRecord.startDate ?: ""
+        selectedEndDate = tripRecord.endDate ?: ""
         buttonSelectDates.text = "$selectedStartDate ~ $selectedEndDate" // 버튼 텍스트 업데이트
-        // 이미지 설정 (예: Glide 또는 Picasso 등을 사용하여 이미지 로드)
-        // tripImage.setImageURI(Uri.parse(tripRecord.imageUri))
+
+        // 이미지 설정
+        selectedImageUris.clear() // 기존 이미지 URI 목록 초기화
+        tripRecord.imageUri?.split(",")?.forEach { uriString ->
+            selectedImageUris.add(Uri.parse(uriString.trim())) // URI 추가
+        }
+        setupImagePager(selectedImageUris.map { it.toString() }) // URI를 문자열 리스트로 변환하여 설정
+    }
+
+    private fun setupImagePager(imageUris: List<String>) {
+        if (imageUris.isNotEmpty()) {
+            val adapter = ImagePagerAdapter(imageUris) // String 리스트를 사용
+            viewPager.adapter = adapter // ViewPager에 어댑터 설정
+        }
     }
 
     private fun showStartDatePickerDialog() {
@@ -132,7 +157,7 @@ class EditTripFragment : Fragment() {
             title = title,
             details = details,
             location = location, // 수정된 위치 저장
-            imageUri = "", // 필요시 이미지 URI도 수정
+            imageUri = selectedImageUris.joinToString(",") { it.toString() }, // 선택된 이미지 URI를 문자열로 변환하여 저장
             startDate = selectedStartDate, // 수정된 시작 날짜 저장
             endDate = selectedEndDate // 수정된 종료 날짜 저장
         )
@@ -144,6 +169,33 @@ class EditTripFragment : Fragment() {
 
         // 이전 화면으로 돌아가기
         requireActivity().supportFragmentManager.popBackStack()
+    }
+
+    private fun openImagePicker() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 여러 장 선택 허용
+        startActivityForResult(intent, REQUEST_IMAGE_PICK)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
+            selectedImageUris.clear() // 기존 이미지 URI 목록 초기화
+
+            if (data?.clipData != null) { // 여러 이미지 선택
+                val count = data.clipData!!.itemCount
+                for (i in 0 until count) {
+                    val uri = data.clipData!!.getItemAt(i).uri
+                    selectedImageUris.add(uri) // 선택한 URI 추가
+                }
+            } else if (data?.data != null) { // 단일 이미지 선택
+                selectedImageUris.add(data.data!!) // 선택한 URI 추가
+            }
+
+            // URI를 문자열 리스트로 변환하여 ViewPager에 설정
+            setupImagePager(selectedImageUris.map { it.toString() }) // Uri를 String으로 변환하여 전달
+        }
     }
 
     // 여행 기록 ID 설정 메서드

@@ -18,9 +18,9 @@ data class TripRecord(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
+        parcel.readString() ?: "", // title 읽기
+        parcel.readString() ?: "", // details 읽기
+        parcel.readString() ?: "", // location 읽기
         parcel.readString(), // 이미지 URI를 nullable로 읽기
         parcel.readString() ?: "", // 시작 날짜 읽기
         parcel.readString() ?: "", // 종료 날짜 읽기
@@ -35,7 +35,7 @@ data class TripRecord(
         parcel.writeString(title)
         parcel.writeString(details)
         parcel.writeString(location)
-        parcel.writeString(imageUri) // 이미지 URI 쓰기
+        parcel.writeString(imageUri) // 이미지 URI 쓰기 (nullable)
         parcel.writeString(startDate) // 시작 날짜 쓰기
         parcel.writeString(endDate) // 종료 날짜 쓰기
         parcel.writeInt(imageResId) // 큰 이미지 리소스

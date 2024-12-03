@@ -37,12 +37,11 @@
             android:textSize="16sp"
             android:layout_marginBottom="8dp" />
 
-        <ImageView
-            android:id="@+id/mainImage"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginBottom="8dp"
-            android:scaleType="centerCrop" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/tripDetails"

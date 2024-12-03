@@ -1,22 +1,22 @@
 package com.example.tripick
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 
 class TripDetailFragment : Fragment() {
     private var tripId: Long = 0 // 여행 기록 ID
-    private lateinit var mainImage: ImageView // 여기서 초기화하지 않음
-    private val REQUEST_IMAGE_PICK = 1001 // 이미지 선택 요청 코드
+    private lateinit var viewPager: ViewPager // ViewPager 초기화
+    private lateinit var tripTitle: TextView // 여행 제목
+    private lateinit var tripStartDate: TextView // 시작 날짜
+    private lateinit var tripEndDate: TextView // 종료 날짜
+    private lateinit var tripDetails: TextView // 여행 일기
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,16 +25,16 @@ class TripDetailFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_trip_detail, container, false)
 
         // UI 요소 초기화
-        val tripTitle: TextView = view.findViewById(R.id.tripTitle)
-        val tripStartDate: TextView = view.findViewById(R.id.tripStartDate) // 시작 날짜 TextView
-        val tripEndDate: TextView = view.findViewById(R.id.tripEndDate) // 종료 날짜 TextView
-        val tripDetails: TextView = view.findViewById(R.id.tripDetails)
+        tripTitle = view.findViewById(R.id.tripTitle)
+        tripStartDate = view.findViewById(R.id.tripStartDate) // 시작 날짜 TextView
+        tripEndDate = view.findViewById(R.id.tripEndDate) // 종료 날짜 TextView
+        tripDetails = view.findViewById(R.id.tripDetails)
         val deleteButton: Button = view.findViewById(R.id.buttonDelete)
         val backButton: Button = view.findViewById(R.id.buttonBack)
         val editButton: Button = view.findViewById(R.id.buttonEdit)
 
-        // mainImage 초기화
-        mainImage = view.findViewById(R.id.mainImage)
+        // ViewPager 초기화
+        viewPager = view.findViewById(R.id.viewPager)
 
         // 삭제 버튼 클릭 리스너 설정
         deleteButton.setOnClickListener {
@@ -62,20 +62,21 @@ class TripDetailFragment : Fragment() {
         val tripRecord = tripRepository.getTripById(tripId) // 여행 기록 가져오기
 
         // UI 업데이트
-        val tripTitle: TextView = view.findViewById(R.id.tripTitle)
-        val tripStartDate: TextView = view.findViewById(R.id.tripStartDate) // 시작 날짜 TextView 추가
-        val tripEndDate: TextView = view.findViewById(R.id.tripEndDate) // 종료 날짜 TextView 추가
-        val tripDetails: TextView = view.findViewById(R.id.tripDetails)
-
         tripTitle.text = tripRecord.title
         tripStartDate.text = "시작 날짜: ${tripRecord.startDate}" // 시작 날짜 표시
         tripEndDate.text = "종료 날짜: ${tripRecord.endDate}" // 종료 날짜 표시
         tripDetails.text = tripRecord.details
 
-        // 이미지 설정 (Glide 사용)
-        Glide.with(requireContext())
-            .load(tripRecord.imageUri) // tripRecord에 이미지 URI가 있다고 가정
-            .into(mainImage)
+        // 이미지 URI를 안전하게 처리
+        val imageUris = tripRecord.imageUri?.split(",")?.map { it.trim() } ?: emptyList()
+        setupViewPager(imageUris)
+    }
+
+    private fun setupViewPager(imageUris: List<String>) {
+        if (imageUris.isNotEmpty()) {
+            val adapter = ImagePagerAdapter(imageUris)
+            viewPager.adapter = adapter
+        }
     }
 
     private fun deleteTripRecord() {
@@ -103,30 +104,6 @@ class TripDetailFragment : Fragment() {
             .replace(R.id.fragment_container, editTripFragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, REQUEST_IMAGE_PICK)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri ->
-                // 선택한 이미지 URI를 ImageView에 설정
-                mainImage.setImageURI(uri)
-
-                // 선택한 이미지 URI를 TripRecord에 저장하거나 업데이트
-                val tripRepository = TripRepository(requireContext())
-                val tripRecord = tripRepository.getTripById(tripId)
-                tripRecord.imageUri = uri.toString() // 이미지 URI 업데이트
-
-                // 필요 시 업데이트된 tripRecord를 다시 저장
-                tripRepository.updateTrip(tripRecord)
-            }
-        }
     }
 
     // 여행 기록 ID 설정 메서드

@@ -50,11 +50,23 @@ class TripAdapter(
         // 시작 날짜와 종료 날짜 표시
         holder.tripDate.text = "${tripRecord.startDate} ~ ${tripRecord.endDate}"
 
-        // 이미지 설정 (Glide를 사용하여 이미지 로드)
-        Glide.with(holder.itemView.context)
-            .load(tripRecord.imageUri) // imageUri가 이미지의 URI라고 가정
-            .into(holder.mainImage)
+        // 첫 번째 이미지 URI 설정
+        val imageUri = tripRecord.imageUri // imageUri를 변수로 저장
+        if (!imageUri.isNullOrEmpty()) { // imageUri가 null이 아니고 비어있지 않을 경우
+            val imageUris = imageUri.split(",").map { it.trim() }
+            if (imageUris.isNotEmpty()) {
+                Glide.with(holder.itemView.context)
+                    .load(imageUris[0]) // 첫 번째 이미지 URI 사용
+                    .into(holder.mainImage)
+            } else {
+                holder.mainImage.setImageResource(R.drawable.ic_home) // 이미지가 없을 경우 기본 이미지 설정
+            }
+        } else {
+            holder.mainImage.setImageResource(R.drawable.ic_home) // imageUri가 null이거나 비어있을 경우 기본 이미지 설정
+        }
     }
+
+
 
     override fun getItemCount(): Int = tripRecords.size
 

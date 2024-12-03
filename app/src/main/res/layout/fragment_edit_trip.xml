@@ -50,12 +50,22 @@
             android:backgroundTint="@color/buttonColor"
             android:layout_marginBottom="16dp" />
 
-        <ImageView
-            android:id="@+id/mainImage"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginBottom="8dp"
-            android:scaleType="centerCrop" />
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/buttonEditImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="사진 수정"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            style="@style/customButtonFontStyle"
+            android:backgroundTint="@color/buttonColor"
+            android:layout_marginBottom="16dp" />
 
         <TextView
             android:id="@+id/tripDetails"
