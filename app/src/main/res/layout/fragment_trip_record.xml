@@ -54,22 +54,23 @@
         android:textSize="18sp"
         android:layout_marginBottom="8dp"/>
 
-    <LinearLayout
+    <!-- ViewPager 추가 -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPagerImages"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- 사진 추가 버튼 -->
+    <Button
+        android:id="@+id/buttonAddImages"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/buttonAddImages"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:text="사진 추가"
-            style="@style/customButtonFontStyle"
-            android:backgroundTint="@color/blue"
-            android:textColor="@android:color/white"
-            android:layout_marginEnd="8dp" />
-    </LinearLayout>
+        android:text="사진 추가"
+        style="@style/customButtonFontStyle"
+        android:backgroundTint="@color/blue"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp" />
 
     <!-- 여행지 선택 버튼 -->
     <TextView

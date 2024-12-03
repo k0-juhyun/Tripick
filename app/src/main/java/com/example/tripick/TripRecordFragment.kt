@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.maps.model.LatLng
 import java.util.Calendar
 
@@ -22,6 +24,7 @@ class TripRecordFragment : Fragment() {
     private lateinit var buttonSelectLocation: Button
     private lateinit var buttonAddTrip: Button
     private lateinit var buttonAddImages: Button
+    private lateinit var viewPagerImages: ViewPager // ViewPager 추가
     private var selectedStartDate: String = ""
     private var selectedEndDate: String = ""
     private var selectedLocation: LatLng? = null // 선택한 위치 저장
@@ -44,6 +47,7 @@ class TripRecordFragment : Fragment() {
         buttonSelectLocation = view.findViewById(R.id.buttonSelectLocation)
         buttonAddTrip = view.findViewById(R.id.buttonAddRecord)
         buttonAddImages = view.findViewById(R.id.buttonAddImages)
+        viewPagerImages = view.findViewById(R.id.viewPagerImages) // ViewPager 초기화
 
         tripRepository = TripRepository(requireContext())
 
@@ -144,6 +148,9 @@ class TripRecordFragment : Fragment() {
         buttonSelectDates.text = "날짜 선택하기"
         selectedLocation = null // 선택한 위치 초기화
         selectedImageUris.clear() // 선택한 이미지 URI 초기화
+
+        // ViewPager 업데이트
+        setupImagePager(emptyList()) // 초기화 후 빈 리스트로 설정
     }
 
     private fun openGalleryForImageSelection() {
@@ -157,7 +164,6 @@ class TripRecordFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_IMAGE_PICK) {
-                // 여러 이미지 선택
                 data?.let {
                     if (it.clipData != null) {
                         val count = it.clipData!!.itemCount
@@ -166,7 +172,6 @@ class TripRecordFragment : Fragment() {
                                 val imageUri = it.clipData!!.getItemAt(i).uri
                                 imageUri?.let { uri -> // null 체크 후 추가
                                     selectedImageUris.add(uri)
-                                    // 선택한 이미지 URI에 대한 추가 처리 (예: UI 업데이트)
                                 }
                             } else {
                                 Toast.makeText(requireContext(), "최대 3개의 이미지만 선택할 수 있습니다.", Toast.LENGTH_SHORT).show()
@@ -178,12 +183,18 @@ class TripRecordFragment : Fragment() {
                         val imageUri = it.data
                         imageUri?.let { uri -> // null 체크 후 추가
                             selectedImageUris.add(uri)
-                            // 선택한 이미지 URI에 대한 추가 처리 (예: UI 업데이트)
                         }
                     }
                 }
+                // ViewPager 업데이트
+                setupImagePager(selectedImageUris.map { it.toString() }) // URI를 String 리스트로 변환하여 설정
             }
         }
+    }
+
+    private fun setupImagePager(imageUris: List<String>) {
+        val adapter = ImagePagerAdapter(imageUris)
+        viewPagerImages.adapter = adapter // ViewPager에 어댑터 설정
     }
 
     fun getCurrentTitle(): String {
