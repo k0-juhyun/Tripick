@@ -66,7 +66,7 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
         map = googleMap
 
         // 초기 위치 설정
-        val initialLocation = LatLng(-34.0, 151.0) // 예시 좌표
+        val initialLocation = LatLng(37.5665, 126.978) // 예시 좌표
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
 
         // 클릭 시 마커 추가

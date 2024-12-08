@@ -30,6 +30,7 @@ class TripDetailFragment : Fragment() {
     private lateinit var tripStartDate: TextView // 시작 날짜
     private lateinit var tripEndDate: TextView // 종료 날짜
     private lateinit var tripDetails: TextView // 여행 일기
+    private lateinit var tripLocation: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +50,7 @@ class TripDetailFragment : Fragment() {
         tripStartDate = view.findViewById(R.id.tripStartDate) // 시작 날짜 TextView
         tripEndDate = view.findViewById(R.id.tripEndDate) // 종료 날짜 TextView
         tripDetails = view.findViewById(R.id.tripDetails)
+        tripLocation = view.findViewById(R.id.tripLocation)
         val deleteButton: Button = view.findViewById(R.id.buttonDelete)
         val backButton: Button = view.findViewById(R.id.buttonBack)
         val editButton: Button = view.findViewById(R.id.buttonEdit)
@@ -83,9 +85,10 @@ class TripDetailFragment : Fragment() {
 
         // UI 업데이트
         tripTitle.text = tripRecord.title
-        tripStartDate.text = "시작 날짜: ${tripRecord.startDate}" // 시작 날짜 표시
-        tripEndDate.text = "종료 날짜: ${tripRecord.endDate}" // 종료 날짜 표시
+        tripStartDate.text = "${tripRecord.startDate} ~ " // 시작 날짜 표시
+        tripEndDate.text = "${tripRecord.endDate}" // 종료 날짜 표시
         tripDetails.text = tripRecord.details
+        tripLocation.text = "여행지 위치: ${tripRecord.location}" // 위치 정보 표시
 
         // 이미지 URI를 안전하게 처리
         val imageUris = tripRecord.imageUri?.split(",")?.map { it.trim() } ?: emptyList()

@@ -10,14 +10,28 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tripTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="여행 제목"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:layout_marginBottom="8dp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tripTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="여행 제목"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:layout_marginRight="200dp" />
+
+            <Button
+                android:id="@+id/buttonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="뒤로가기"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/buttonColor" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextTitle"
@@ -27,6 +41,29 @@
             android:textColor="@color/black"
             android:padding="8dp"
             android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tripLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행지"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/editTextLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="여행 위치를 입력하세요"
+            android:textColor="@color/black"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tripDate"
@@ -39,13 +76,23 @@
 
         <Button
             android:id="@+id/buttonSelectDates"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="여행 날짜 선택"
             android:padding="8dp"
             android:textColor="@color/black"
             android:backgroundTint="@color/buttonColor"
             android:layout_marginBottom="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tripPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행 사진"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewPager"
@@ -84,24 +131,6 @@
             android:gravity="top|start"
             android:maxLines="10" />
 
-        <TextView
-            android:id="@+id/tripLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="여행지"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:layout_marginBottom="8dp" />
-
-        <EditText
-            android:id="@+id/editTextLocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="여행 위치를 입력하세요"
-            android:textColor="@color/black"
-            android:padding="8dp"
-            android:layout_marginBottom="16dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -117,14 +146,7 @@
                 android:textColor="@color/black"
                 android:backgroundTint="@color/buttonColor" />
 
-            <Button
-                android:id="@+id/buttonBack"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="뒤로가기"
-                android:textColor="@color/black"
-                android:backgroundTint="@color/buttonColor" />
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

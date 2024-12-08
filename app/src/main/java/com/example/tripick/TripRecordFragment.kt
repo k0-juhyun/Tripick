@@ -25,10 +25,8 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.maps.model.LatLng
 import java.util.Calendar
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.activityViewModels
 
 class TripRecordFragment : Fragment() {
-    private val viewModel: TripRecordViewModel by activityViewModels()
     private lateinit var editTextTitle: EditText
     private lateinit var editTextDetails: EditText
     private lateinit var buttonSelectDates: Button
@@ -89,33 +87,12 @@ class TripRecordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editTextTitle.setText(viewModel.tripRecord?.title)
-        editTextDetails.setText(viewModel.tripRecord?.details)
-        locationTextView.text = viewModel.tripRecord?.location ?: "선택한 위치가 여기에 표시됩니다."
-
         setFragmentResultListener("requestKey") { requestKey, bundle ->
             val latitude = bundle.getDouble("latitude")
             val longitude = bundle.getDouble("longitude")
 
             // 위치 이름 업데이트
             updateLocationName(latitude, longitude)
-
-            // 위치 저장 코드 수정
-            viewModel.tripRecord = viewModel.tripRecord?.copy(
-                location = locationTextView.text.toString(),
-                title = editTextTitle.text.toString(),
-                details = editTextDetails.text.toString(),
-                startDate = selectedStartDate,
-                endDate = selectedEndDate,
-                imageUri = selectedImageUris.joinToString(",") // 필요 시 이미지 URI도 추가
-            ) ?: TripRecord(
-                title = editTextTitle.text.toString(),
-                details = editTextDetails.text.toString(),
-                location = locationTextView.text.toString(),
-                startDate = selectedStartDate,
-                endDate = selectedEndDate,
-                imageUri = selectedImageUris.joinToString(",") // 필요 시
-            )
 
             // Toast로 선택된 위치 확인
             Toast.makeText(requireContext(), "위치가 선택되었습니다: $latitude, $longitude", Toast.LENGTH_SHORT).show()
