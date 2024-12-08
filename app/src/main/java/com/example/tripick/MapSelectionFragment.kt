@@ -20,13 +20,13 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private var selectedLocation: LatLng? = null
     private lateinit var button: Button
+    private var selectedMarker: com.google.android.gms.maps.model.Marker? = null // 선택된 마커
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_map_selection, container, false)
-
         // SupportMapFragment 초기화
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -51,12 +51,7 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
 
             setFragmentResult("requestKey", result)
 
-            // TripRecordFragment로 전환
-            val tripRecordFragment = TripRecordFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, tripRecordFragment)
-                .addToBackStack(null)
-                .commit()
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
         return view
@@ -71,8 +66,26 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
 
         // 클릭 시 마커 추가
         map.setOnMapClickListener { latLng ->
-            showConfirmationDialog(latLng) // 다이얼로그 표시
+            addMarker(latLng) // 마커 추가
         }
+
+        // 마커 클릭 리스너 설정
+        map.setOnMarkerClickListener { marker ->
+            selectedLocation = marker.position
+            showConfirmationDialog(selectedLocation!!) // 다이얼로그 표시
+            true // 마커 클릭 이벤트가 소비되었음을 나타냄
+        }
+    }
+
+    private fun addMarker(location: LatLng) {
+        // 기존 마커가 있으면 제거
+        selectedMarker?.remove()
+
+        // 새로운 마커 추가
+        selectedMarker = map.addMarker(MarkerOptions().position(location).title("선택한 위치"))
+
+        // 카메라를 선택한 위치로 이동
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
     }
 
     private fun showConfirmationDialog(latLng: LatLng) {
@@ -80,23 +93,16 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
             .setTitle("위치 선택")
             .setMessage("이 위치를 선택하시겠습니까?")
             .setPositiveButton("예") { dialog, _ ->
-                selectedLocation = latLng
-                Toast.makeText(requireContext(), "위치가 선택되었습니다: $latLng", Toast.LENGTH_SHORT).show()
-
-                // FragmentResult로 위치 전달
+                // 선택된 위치를 FragmentResult로 설정
                 val result = Bundle().apply {
                     putDouble("latitude", latLng.latitude)
                     putDouble("longitude", latLng.longitude)
                 }
                 setFragmentResult("requestKey", result)
 
-                // TripRecordFragment로 전환
-                val tripRecordFragment = TripRecordFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, tripRecordFragment)
-                    .addToBackStack(null)
-                    .commit()
+                Toast.makeText(requireContext(), "위치가 선택되었습니다: $latLng", Toast.LENGTH_SHORT).show()
 
+                requireActivity().supportFragmentManager.popBackStack()
                 dialog.dismiss()
             }
             .setNegativeButton("아니오") { dialog, _ ->

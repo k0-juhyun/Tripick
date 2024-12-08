@@ -51,13 +51,14 @@
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/editTextLocation"
+        <Button
+            android:id="@+id/buttonChangeLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="여행 위치를 입력하세요"
-            android:textColor="@color/black"
+            android:text="여행지 위치 변경"
             android:padding="8dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/buttonColor"
             android:layout_marginBottom="16dp" />
 
         <LinearLayout

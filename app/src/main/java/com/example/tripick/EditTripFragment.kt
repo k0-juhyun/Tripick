@@ -20,8 +20,8 @@ class EditTripFragment : Fragment() {
     private var tripId: Long = 0 // 수정할 여행 기록 ID
     private lateinit var editTextTitle: EditText
     private lateinit var editTextDetails: EditText
-    private lateinit var editTextLocation: EditText // 위치 입력 필드
     private lateinit var buttonSelectDates: Button // 날짜 선택 버튼
+    private lateinit var buttonChangeLocation: Button
     private lateinit var buttonSave: Button
     private lateinit var viewPager: ViewPager // ViewPager 초기화
     private lateinit var buttonEditImage: Button // 사진 수정 버튼
@@ -39,11 +39,11 @@ class EditTripFragment : Fragment() {
         // UI 요소 초기화
         editTextTitle = view.findViewById(R.id.editTextTitle)
         editTextDetails = view.findViewById(R.id.editTextDetails)
-        editTextLocation = view.findViewById(R.id.editTextLocation) // 위치 필드 초기화
         buttonSelectDates = view.findViewById(R.id.buttonSelectDates) // 날짜 선택 버튼 초기화
         buttonSave = view.findViewById(R.id.buttonSave)
         viewPager = view.findViewById(R.id.viewPager) // ViewPager 초기화
         buttonEditImage = view.findViewById(R.id.buttonEditImage) // 사진 수정 버튼 초기화
+        buttonChangeLocation = view.findViewById(R.id.buttonChangeLocation)
 
         // 여행 기록 로드
         loadTripDetails()
@@ -51,6 +51,11 @@ class EditTripFragment : Fragment() {
         // 날짜 선택 버튼 클릭 리스너
         buttonSelectDates.setOnClickListener {
             showStartDatePickerDialog()
+        }
+
+        // 위치 변경 버튼 클릭 리스너
+        view.findViewById<Button>(R.id.buttonChangeLocation).setOnClickListener {
+            showMapSelection()
         }
 
         // 저장 버튼 클릭 리스너
@@ -71,6 +76,14 @@ class EditTripFragment : Fragment() {
         return view
     }
 
+    private fun showMapSelection() {
+        val mapFragment = MapSelectionFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, mapFragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun loadTripDetails() {
         val tripRepository = TripRepository(requireContext())
         val tripRecord = tripRepository.getTripById(tripId)
@@ -78,7 +91,7 @@ class EditTripFragment : Fragment() {
         // UI 업데이트 (null 체크 추가)
         editTextTitle.setText(tripRecord.title ?: "")
         editTextDetails.setText(tripRecord.details ?: "")
-        editTextLocation.setText(tripRecord.location ?: "")
+        buttonChangeLocation.setText(tripRecord.location ?: "")
         selectedStartDate = tripRecord.startDate ?: ""
         selectedEndDate = tripRecord.endDate ?: ""
         buttonSelectDates.text = "$selectedStartDate ~ $selectedEndDate" // 버튼 텍스트 업데이트
@@ -149,7 +162,7 @@ class EditTripFragment : Fragment() {
     private fun saveTripRecord() {
         val title = editTextTitle.text.toString()
         val details = editTextDetails.text.toString()
-        val location = editTextLocation.text.toString()
+        val location = buttonChangeLocation.text.toString()
 
         // 수정된 여행 기록 생성
         val updatedTripRecord = TripRecord(

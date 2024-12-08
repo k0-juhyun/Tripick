@@ -7,7 +7,7 @@ data class TripRecord(
     val id: Long = 0, // 데이터베이스에서 자동 생성됨
     val title: String,
     val details: String,
-    val location: String,
+    var location: String, // var로 변경하여 수정 가능하도록
     var imageUri: String? = null, // 이미지 URI를 nullable로 변경
     val startDate: String, // 시작 날짜
     val endDate: String, // 종료 날짜 추가
@@ -34,7 +34,7 @@ data class TripRecord(
         parcel.writeLong(id)
         parcel.writeString(title)
         parcel.writeString(details)
-        parcel.writeString(location)
+        parcel.writeString(location) // location을 제대로 쓰기
         parcel.writeString(imageUri) // 이미지 URI 쓰기 (nullable)
         parcel.writeString(startDate) // 시작 날짜 쓰기
         parcel.writeString(endDate) // 종료 날짜 쓰기

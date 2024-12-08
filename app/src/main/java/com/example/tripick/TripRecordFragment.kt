@@ -41,6 +41,7 @@ class TripRecordFragment : Fragment() {
     private var selectedLocation: LatLng? = null // 선택한 위치 저장
     private lateinit var tripRepository: TripRepository
     private var selectedImageUris: MutableList<Uri> = mutableListOf() // 선택된 이미지 URI 저장
+    private var tripRecord: TripRecord? = null
 
     companion object {
         const val REQUEST_CODE_IMAGE_PICK = 1
@@ -97,6 +98,26 @@ class TripRecordFragment : Fragment() {
 
             // Toast로 선택된 위치 확인
             Toast.makeText(requireContext(), "위치가 선택되었습니다: $latitude, $longitude", Toast.LENGTH_SHORT).show()
+
+            // 여행지 정보 UI 업데이트
+            updateTripInfoUI()
+        }
+    }
+
+    private fun updateTripInfoUI() {
+        // 여행 날짜 및 사진 정보 업데이트
+        buttonSelectDates.text = if (selectedStartDate.isNotEmpty() && selectedEndDate.isNotEmpty()) {
+            "$selectedStartDate ~ $selectedEndDate"
+        } else {
+            "여행 날짜 선택하기"
+        }
+
+        // 선택된 이미지가 있을 경우 ViewPager 업데이트
+        if (selectedImageUris.isNotEmpty()) {
+            setupImagePager(selectedImageUris.map { it.toString() })
+        } else {
+            // 선택된 이미지가 없을 경우 기본 이미지 또는 공백 처리
+            setupImagePager(emptyList()) // 또는 기본 이미지 URI 리스트
         }
     }
 
@@ -107,6 +128,22 @@ class TripRecordFragment : Fragment() {
             if (addressList != null && addressList.isNotEmpty()) {
                 val address = addressList[0].getAddressLine(0) // 전체 주소
                 locationTextView.text = "선택한 위치: $address"
+
+                // TripRecord의 location 필드에 주소 할당
+                // 기존 tripRecord가 null이면 새로운 TripRecord 객체를 생성
+                tripRecord = if (tripRecord != null) {
+                    tripRecord!!.copy(location = address) // 기존 객체를 복사하고 location 업데이트
+                } else {
+                    // 모든 필드를 제공하여 새로운 TripRecord 객체 생성
+                    TripRecord(
+                        title = "", // 기본값 또는 입력된 값 사용
+                        details = "", // 기본값 또는 입력된 값 사용
+                        location = address, // 새로 가져온 주소
+                        imageUri = null, // 기본값 설정
+                        startDate = "", // 기본값 설정
+                        endDate = "" // 기본값 설정
+                    )
+                }
             } else {
                 locationTextView.text = "선택한 위치: 주소를 찾을 수 없습니다."
             }
@@ -115,6 +152,7 @@ class TripRecordFragment : Fragment() {
             locationTextView.text = "선택한 위치: 주소를 찾을 수 없습니다."
         }
     }
+
 
     private fun showStartDatePickerDialog() {
         val calendar = Calendar.getInstance()
@@ -203,17 +241,16 @@ class TripRecordFragment : Fragment() {
     private fun addTripRecord() {
         val title = editTextTitle.text.toString()
         val details = editTextDetails.text.toString()
-        val location = selectedLocation?.let { "${it.latitude}, ${it.longitude}" } ?: "위치 없음"
-        val imageUris = selectedImageUris.joinToString(",") // 선택된 이미지 URI 설정
+        val location = tripRecord?.location ?: "위치 없음" // tripRecord의 location 사용
 
         Log.d("AddTripRecord", "Location: $location")
 
         val newTripRecord = TripRecord(
-            id = 0, // 초기값 설정, 나중에 데이터베이스에서 ID를 가져올 것
+            id = 0,
             title = title,
             details = details,
-            location = location,
-            imageUri = imageUris,
+            location = location, // TripRecord의 location 사용
+            imageUri = selectedImageUris.joinToString(","),
             startDate = selectedStartDate,
             endDate = selectedEndDate // 종료 날짜 추가
         )
@@ -227,6 +264,7 @@ class TripRecordFragment : Fragment() {
         editTextTitle.text.clear()
         editTextDetails.text.clear()
         buttonSelectDates.text = "날짜 선택하기"
+        tripRecord = null
         selectedLocation = null // 선택한 위치 초기화
         selectedImageUris.clear() // 선택한 이미지 URI 초기화
 
@@ -237,6 +275,8 @@ class TripRecordFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+
 
     private fun openGalleryForImageSelection() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)

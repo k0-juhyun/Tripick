@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
@@ -30,16 +29,35 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         this.map = googleMap
 
-        // 초기 위치 설정
-        val initialLocation = LatLng(37.5665, 126.978) // 서울
+        // 초기 위치 설정 (서울)
+        val initialLocation = LatLng(37.5665, 126.978)
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 10f))
 
-        // 예시: 마커 추가
-        map.addMarker(MarkerOptions().position(initialLocation).title("서울"))
+        // 여행 기록의 위치 가져오기
+        loadTripLocations()
+    }
+
+    private fun loadTripLocations() {
+        val tripRepository = TripRepository(requireContext())
+        val tripRecords = tripRepository.getAllTrips() // 모든 여행 기록 가져오기
+
+        for (trip in tripRecords) {
+            // 위치가 유효한지 확인
+            val locationParts = trip.location.split(",")
+            if (locationParts.size == 2) {
+                val latitude = locationParts[0].toDoubleOrNull()
+                val longitude = locationParts[1].toDoubleOrNull()
+
+                if (latitude != null && longitude != null) {
+                    val location = LatLng(latitude, longitude)
+                    addMarker(trip.title, trip.details, location) // 마커 추가
+                }
+            }
+        }
     }
 
     private fun addMarker(title: String, snippet: String, location: LatLng) {
         map.addMarker(MarkerOptions().position(location).title(title).snippet(snippet))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f)) // 마지막 마커 위치로 카메라 이동
     }
 }
