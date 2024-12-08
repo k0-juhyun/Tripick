@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@android:color/white"
+    android:layout_margin="5dp">
+
+    <!-- 여행 제목 -->
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginBottom="5dp"
+        android:text="Travel Title" />
+
+    <!-- 여행 날짜 -->
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#777777"
+        android:layout_marginBottom="10dp"
+        android:text="Start - End Date" />
+
+    <!-- 여행 이미지 -->
+    <ImageView
+        android:id="@+id/photoImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        android:contentDescription="Trip Image" />
+
+</LinearLayout>
