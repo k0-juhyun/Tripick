@@ -27,31 +27,50 @@
         android:inputType="text" />
 
     <!-- 날짜 입력 버튼 -->
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="여행 날짜"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행 날짜"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
 
-    <Button
-        android:id="@+id/buttonSelectDates"
-        android:backgroundTint="@color/buttonColor"
-        android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/buttonSelectDates"
+            android:backgroundTint="@color/buttonColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="날짜 선택" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="날짜 선택" />
-
+        android:orientation="horizontal">
     <!-- 이미지 추가 버튼 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="여행 사진"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행 사진"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
 
+        <!-- 사진 추가 버튼 -->
+        <Button
+            android:id="@+id/buttonAddImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진 추가"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp" />
+    </LinearLayout>
     <!-- ViewPager 추가 -->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPagerImages"
@@ -59,42 +78,37 @@
         android:layout_height="200dp"
         android:layout_marginBottom="8dp" />
 
-    <!-- 사진 추가 버튼 -->
-    <Button
-        android:id="@+id/buttonAddImages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="사진 추가"
-        android:backgroundTint="@color/buttonColor"
-        android:textColor="@color/black"
-        android:layout_marginBottom="16dp" />
-
     <!-- 여행지 선택 버튼 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="여행지"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/buttonSelectLocation"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="여행지 선택하기"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/buttonColor"
-        android:layout_marginBottom="16dp" />
+
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행지"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/buttonSelectLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여행지 선택하기"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/buttonColor"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/locationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="선택한 위치가 여기에 표시됩니다."
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"/>
-
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="20dp"/>
     <!-- 여행 일기 입력 -->
     <TextView
         android:layout_width="wrap_content"
