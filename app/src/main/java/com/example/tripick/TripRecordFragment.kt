@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.location.Geocoder
+import android.util.Log
 import java.util.Locale
 import android.view.View
 import android.view.ViewGroup
@@ -204,6 +205,8 @@ class TripRecordFragment : Fragment() {
         val details = editTextDetails.text.toString()
         val location = selectedLocation?.let { "${it.latitude}, ${it.longitude}" } ?: "위치 없음"
         val imageUris = selectedImageUris.joinToString(",") // 선택된 이미지 URI 설정
+
+        Log.d("AddTripRecord", "Location: $location")
 
         val newTripRecord = TripRecord(
             id = 0, // 초기값 설정, 나중에 데이터베이스에서 ID를 가져올 것
