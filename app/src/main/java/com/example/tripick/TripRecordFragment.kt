@@ -9,11 +9,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.location.Geocoder
+import java.util.Locale
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
+import java.io.IOException
 import androidx.core.content.ContextCompat
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -21,8 +25,10 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.maps.model.LatLng
 import java.util.Calendar
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.activityViewModels
 
 class TripRecordFragment : Fragment() {
+    private val viewModel: TripRecordViewModel by activityViewModels()
     private lateinit var editTextTitle: EditText
     private lateinit var editTextDetails: EditText
     private lateinit var buttonSelectDates: Button
@@ -30,6 +36,7 @@ class TripRecordFragment : Fragment() {
     private lateinit var buttonAddTrip: Button
     private lateinit var buttonAddImages: Button
     private lateinit var viewPagerImages: ViewPager // ViewPager 추가
+    private lateinit var locationTextView: TextView
     private var selectedStartDate: String = ""
     private var selectedEndDate: String = ""
     private var selectedLocation: LatLng? = null // 선택한 위치 저장
@@ -54,6 +61,7 @@ class TripRecordFragment : Fragment() {
         buttonAddTrip = view.findViewById(R.id.buttonAddRecord)
         buttonAddImages = view.findViewById(R.id.buttonAddImages)
         viewPagerImages = view.findViewById(R.id.viewPagerImages) // ViewPager 초기화
+        locationTextView = view.findViewById(R.id.locationTextView)
 
         tripRepository = TripRepository(requireContext())
 
@@ -81,16 +89,53 @@ class TripRecordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // FragmentResultListener 설정
+        editTextTitle.setText(viewModel.tripRecord?.title)
+        editTextDetails.setText(viewModel.tripRecord?.details)
+        locationTextView.text = viewModel.tripRecord?.location ?: "선택한 위치가 여기에 표시됩니다."
+
         setFragmentResultListener("requestKey") { requestKey, bundle ->
             val latitude = bundle.getDouble("latitude")
             val longitude = bundle.getDouble("longitude")
-            selectedLocation = LatLng(latitude, longitude)
 
-            // 선택한 위치를 사용하여 UI 업데이트
+            // 위치 이름 업데이트
+            updateLocationName(latitude, longitude)
+
+            // 위치 저장 코드 수정
+            viewModel.tripRecord = viewModel.tripRecord?.copy(
+                location = locationTextView.text.toString(),
+                title = editTextTitle.text.toString(),
+                details = editTextDetails.text.toString(),
+                startDate = selectedStartDate,
+                endDate = selectedEndDate,
+                imageUri = selectedImageUris.joinToString(",") // 필요 시 이미지 URI도 추가
+            ) ?: TripRecord(
+                title = editTextTitle.text.toString(),
+                details = editTextDetails.text.toString(),
+                location = locationTextView.text.toString(),
+                startDate = selectedStartDate,
+                endDate = selectedEndDate,
+                imageUri = selectedImageUris.joinToString(",") // 필요 시
+            )
+
+            // Toast로 선택된 위치 확인
             Toast.makeText(requireContext(), "위치가 선택되었습니다: $latitude, $longitude", Toast.LENGTH_SHORT).show()
         }
+    }
 
+    private fun updateLocationName(latitude: Double, longitude: Double) {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        try {
+            val addressList = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addressList != null && addressList.isNotEmpty()) {
+                val address = addressList[0].getAddressLine(0) // 전체 주소
+                locationTextView.text = "선택한 위치: $address"
+            } else {
+                locationTextView.text = "선택한 위치: 주소를 찾을 수 없습니다."
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            locationTextView.text = "선택한 위치: 주소를 찾을 수 없습니다."
+        }
     }
 
     private fun showStartDatePickerDialog() {

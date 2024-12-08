@@ -1,10 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.tripick"
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 위치 권한 추가 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +21,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAjBbmCApv2qhguflKq3kBpWdS95QhAojc" /> <!-- API 키를 입력하세요 -->
+            android:value="AIzaSyClQuvcWD0cFnnZ4mUPw1UTk-1XA0SKnZo" /> <!-- API 키를 입력하세요 -->
 
         <activity
             android:name=".MainActivity"

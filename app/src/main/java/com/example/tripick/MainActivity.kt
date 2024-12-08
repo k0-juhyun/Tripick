@@ -3,11 +3,13 @@ package com.example.tripick
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigationView: BottomNavigationView
     private var tripRecordFragment: TripRecordFragment? = null // TripRecordFragment 인스턴스를 유지
+    private val viewModel: TripRecordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

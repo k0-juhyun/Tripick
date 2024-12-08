@@ -13,6 +13,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import android.app.AlertDialog
 import androidx.fragment.app.setFragmentResult
 
 class MapSelectionFragment : Fragment(), OnMapReadyCallback {
@@ -26,12 +27,17 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_map_selection, container, false)
 
+        // SupportMapFragment 초기화
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
         // 버튼 초기화
         button = view.findViewById(R.id.selectLocationButton)
+        button.visibility = View.GONE // 처음에는 숨김
+
+        // 버튼 클릭 리스너
         button.setOnClickListener {
+            // 선택된 위치가 null인지 확인
             if (selectedLocation == null) {
                 Toast.makeText(requireContext(), "위치를 선택하세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -39,7 +45,6 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
 
             // 선택한 위치를 FragmentResult로 설정
             val result = Bundle().apply {
-                putString("location_title", "선택한 위치")
                 putDouble("latitude", selectedLocation!!.latitude)
                 putDouble("longitude", selectedLocation!!.longitude)
             }
@@ -54,7 +59,6 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
                 .commit()
         }
 
-
         return view
     }
 
@@ -67,13 +71,38 @@ class MapSelectionFragment : Fragment(), OnMapReadyCallback {
 
         // 클릭 시 마커 추가
         map.setOnMapClickListener { latLng ->
-            map.clear() // 기존 마커 제거
-            selectedLocation = latLng // 새로운 위치 저장
-            map.addMarker(MarkerOptions().position(latLng).title("선택한 위치"))
-
-            // 버튼 보이기
-            button.visibility = View.VISIBLE
+            showConfirmationDialog(latLng) // 다이얼로그 표시
         }
+    }
 
+    private fun showConfirmationDialog(latLng: LatLng) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("위치 선택")
+            .setMessage("이 위치를 선택하시겠습니까?")
+            .setPositiveButton("예") { dialog, _ ->
+                selectedLocation = latLng
+                Toast.makeText(requireContext(), "위치가 선택되었습니다: $latLng", Toast.LENGTH_SHORT).show()
+
+                // FragmentResult로 위치 전달
+                val result = Bundle().apply {
+                    putDouble("latitude", latLng.latitude)
+                    putDouble("longitude", latLng.longitude)
+                }
+                setFragmentResult("requestKey", result)
+
+                // TripRecordFragment로 전환
+                val tripRecordFragment = TripRecordFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, tripRecordFragment)
+                    .addToBackStack(null)
+                    .commit()
+
+                dialog.dismiss()
+            }
+            .setNegativeButton("아니오") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 }

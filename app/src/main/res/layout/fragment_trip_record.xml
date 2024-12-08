@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@color/white">
-
     <!-- 여행 제목 입력 -->
     <TextView
         android:layout_width="wrap_content"
@@ -88,6 +87,14 @@
         android:backgroundTint="@color/buttonColor"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:id="@+id/locationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="선택한 위치가 여기에 표시됩니다."
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"/>
+
     <!-- 여행 일기 입력 -->
     <TextView
         android:layout_width="wrap_content"
@@ -115,5 +122,4 @@
         android:text="작성하기"
         android:backgroundTint="@color/buttonColor"
         android:textColor="@color/black" />
-
 </LinearLayout>
