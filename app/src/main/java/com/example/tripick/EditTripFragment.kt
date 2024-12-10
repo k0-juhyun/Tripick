@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
@@ -20,8 +21,8 @@ class EditTripFragment : Fragment() {
     private var tripId: Long = 0 // 수정할 여행 기록 ID
     private lateinit var editTextTitle: EditText
     private lateinit var editTextDetails: EditText
-    private lateinit var buttonSelectDates: Button // 날짜 선택 버튼
     private lateinit var buttonChangeLocation: Button
+    private lateinit var buttonSelectDates: Button // 날짜 선택 버튼
     private lateinit var buttonSave: Button
     private lateinit var viewPager: ViewPager // ViewPager 초기화
     private lateinit var buttonEditImage: Button // 사진 수정 버튼
@@ -69,7 +70,7 @@ class EditTripFragment : Fragment() {
         }
 
         // 뒤로가기 버튼 클릭 리스너
-        view.findViewById<Button>(R.id.buttonBack).setOnClickListener {
+        view.findViewById<ImageButton>(R.id.buttonBack).setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }
 

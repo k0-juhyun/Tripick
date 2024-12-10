@@ -1,8 +1,13 @@
 package com.example.tripick
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -17,12 +22,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.setFragmentResultListener
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.gms.maps.model.Marker
 import java.util.Locale
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
+    private val REQUEST_CODE = 100 // 권한 요청 코드
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +42,34 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this) // 비동기 호출
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requestStoragePermission() // 권한 요청
+    }
+
+    // 권한 요청 메서드
+    private fun requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_CODE)
+        }
+    }
+
+    // 권한 요청 결과 처리 메서드
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 허용되었을 때의 행동
+                Log.d("MapFragment", "Permission granted")
+            } else {
+                // 권한이 거부되었을 때의 행동
+                Log.d("MapFragment", "Permission denied")
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -62,36 +100,63 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 val view = layoutInflater.inflate(R.layout.info_window_layout, null)
 
                 // 마커에 해당하는 여행 정보
-                val tripRecord = marker.tag as TripRecord
-                val titleText = view.findViewById<TextView>(R.id.titleText)
-                val dateText = view.findViewById<TextView>(R.id.dateText)
-                val photoImage = view.findViewById<ImageView>(R.id.photoImage)
+                val tripRecord = marker.tag as? TripRecord
+                if (tripRecord != null) {
+                    val titleText = view.findViewById<TextView>(R.id.titleText)
+                    val dateText = view.findViewById<TextView>(R.id.dateText)
+                    val photoImage = view.findViewById<ImageView>(R.id.photoImage)
 
-                // 제목, 날짜, 이미지 설정
-                titleText.text = tripRecord.title
-                dateText.text = "${tripRecord.startDate} ~ ${tripRecord.endDate}"
-                tripRecord.imageUri?.let {
-                    Glide.with(requireContext())
-                        .load(it) // 이미지 URI를 로드
-                        .fitCenter() // 이미지를 ImageView에 맞게 축소
-                        .into(photoImage)
+                    // 제목, 날짜, 이미지 설정
+                    titleText.text = tripRecord.title
+                    dateText.text = "${tripRecord.startDate} ~ ${tripRecord.endDate}"
+
+                    // 첫 번째 이미지 URI를 가져와서 로드
+                    tripRecord.imageUri?.let {
+                        Glide.with(requireContext())
+                            .load(it) // 이미지 URI를 로드
+                            .override(200, 200) // 원하는 크기로 조정
+                            .fitCenter() // 이미지를 ImageView에 맞게 축소
+                            .error(R.drawable.ic_map) // 에러 이미지 설정 (실패 시)
+                            .listener(object : RequestListener<Drawable> {
+                                override fun onLoadFailed(
+                                    e: GlideException?,
+                                    model: Any?,
+                                    target: Target<Drawable>?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    Log.e("Glide", "Image load failed", e)
+                                    return false
+                                }
+
+                                override fun onResourceReady(
+                                    resource: Drawable?,
+                                    model: Any?,
+                                    target: Target<Drawable>?,
+                                    dataSource: DataSource?,
+                                    isFirstResource: Boolean
+                                ): Boolean {
+                                    return false
+                                }
+                            })
+                            .into(photoImage)
+                    }
                 }
-
                 return view
             }
         })
 
         // 마커 클릭 시 InfoWindow만 열리게 하고, 이동은 InfoWindow 클릭 시만
         map.setOnMarkerClickListener { marker ->
-            // InfoWindow를 열기 위해 return false
-            marker.showInfoWindow()
+            marker.showInfoWindow() // InfoWindow를 열기 위해 return false
             false // InfoWindow를 열기만 하고, 이동은 여기서 하지 않음
         }
 
         // InfoWindow 클릭 시 상세 페이지로 이동
         map.setOnInfoWindowClickListener { marker ->
-            val tripRecord = marker.tag as TripRecord
-            navigateToTripDetail(tripRecord.id)
+            val tripRecord = marker.tag as? TripRecord
+            tripRecord?.let {
+                navigateToTripDetail(it.id)
+            }
         }
     }
 
@@ -137,4 +202,3 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
     }
 }
-

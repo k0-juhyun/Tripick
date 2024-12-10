@@ -6,13 +6,26 @@
     android:padding="16dp"
     android:background="@color/white">
     <!-- 여행 제목 입력 -->
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="여행 제목"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:layout_marginBottom="8dp" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src ="@drawable/ic_trip"
+            android:scaleType="centerInside"
+            android:layout_marginRight="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[여행 제목]"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editTextTitle"
@@ -31,27 +44,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src ="@drawable/ic_calender"
+            android:scaleType="centerInside"
+            android:layout_marginRight="4dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행 날짜"
+            android:text="[여행 날짜]"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
+        <TextView
+            android:id="@+id/textViewDates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonSelectDates"
             android:backgroundTint="@color/buttonColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:background="@drawable/round_btn"
-            android:text="날짜 선택" />
+            android:src="@drawable/ic_add"
+            android:scaleType="centerInside"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -59,10 +86,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
     <!-- 이미지 추가 버튼 -->
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src ="@drawable/ic_photo"
+            android:scaleType="centerInside"
+            android:layout_marginRight="4dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행 사진"
+            android:text="[여행 사진]"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
@@ -72,17 +107,18 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-
         <!-- 사진 추가 버튼 -->
-        <Button
+        <ImageButton
             android:id="@+id/buttonAddImages"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="사진 추가"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:backgroundTint="@color/buttonColor"
+            android:src ="@drawable/ic_add"
             android:background="@drawable/round_btn"
+            android:scaleType="centerInside"
             android:textColor="@color/black"
             android:layout_marginBottom="16dp" />
+
     </LinearLayout>
     <!-- ViewPager 추가 -->
     <androidx.viewpager.widget.ViewPager
@@ -95,12 +131,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src ="@drawable/ic_place"
+            android:scaleType="centerInside"
+            android:layout_marginRight="4dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="여행지"
+            android:text="[여행지]"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
@@ -110,14 +153,13 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonSelectLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/buttonColor"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src ="@drawable/ic_add"
             android:background="@drawable/round_btn"
-            android:text="여행지 선택하기"
-            android:textColor="@color/black" />
+            android:scaleType="centerInside" />
     </LinearLayout>
 
     <TextView
@@ -128,14 +170,28 @@
         android:textSize="18sp"
         android:textColor="@color/black"
         android:layout_marginBottom="20dp"/>
+
     <!-- 여행 일기 입력 -->
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="여행 일기"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_marginBottom="8dp" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src ="@drawable/ic_write"
+            android:scaleType="centerInside"
+            android:layout_marginRight="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[여행 일기]"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editTextDetails"
@@ -148,12 +204,18 @@
         android:layout_marginBottom="16dp"
         android:inputType="textMultiLine" />
 
-    <Button
-        android:id="@+id/buttonAddRecord"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="작성하기"
-        android:backgroundTint="@color/buttonColor"
-        android:background="@drawable/round_btn"
-        android:textColor="@color/black" />
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/buttonAddRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="작성 완료"
+            android:background="@drawable/round_btn"
+            android:textColor="@color/black" />
+    </LinearLayout>
 </LinearLayout>

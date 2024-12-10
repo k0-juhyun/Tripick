@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.bumptech.glide.Glide
 
@@ -52,7 +53,7 @@ class TripDetailFragment : Fragment() {
         tripDetails = view.findViewById(R.id.tripDetails)
         tripLocation = view.findViewById(R.id.tripLocation)
         val deleteButton: Button = view.findViewById(R.id.buttonDelete)
-        val backButton: Button = view.findViewById(R.id.buttonBack)
+        val backButton: ImageButton = view.findViewById(R.id.buttonBack)
         val editButton: Button = view.findViewById(R.id.buttonEdit)
 
         // ViewPager 초기화
@@ -88,7 +89,7 @@ class TripDetailFragment : Fragment() {
         tripStartDate.text = "${tripRecord.startDate} ~ " // 시작 날짜 표시
         tripEndDate.text = "${tripRecord.endDate}" // 종료 날짜 표시
         tripDetails.text = tripRecord.details
-        tripLocation.text = "여행지 위치: ${tripRecord.location}" // 위치 정보 표시
+        tripLocation.text = "[여행지]\n${tripRecord.location}" // 위치 정보 표시
 
         // 이미지 URI를 안전하게 처리
         val imageUris = tripRecord.imageUri?.split(",")?.map { it.trim() } ?: emptyList()
@@ -128,6 +129,8 @@ class TripDetailFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+
 
     // 여행 기록 ID 설정 메서드
     fun setTripId(id: Long) {

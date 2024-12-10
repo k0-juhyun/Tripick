@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import java.io.IOException
@@ -30,10 +31,11 @@ import androidx.fragment.app.setFragmentResultListener
 class TripRecordFragment : Fragment() {
     private lateinit var editTextTitle: EditText
     private lateinit var editTextDetails: EditText
-    private lateinit var buttonSelectDates: Button
-    private lateinit var buttonSelectLocation: Button
+    private lateinit var buttonSelectDates: ImageButton
+    private lateinit var dateTextView: TextView
+    private lateinit var buttonSelectLocation: ImageButton
     private lateinit var buttonAddTrip: Button
-    private lateinit var buttonAddImages: Button
+    private lateinit var buttonAddImages: ImageButton
     private lateinit var viewPagerImages: ViewPager // ViewPager 추가
     private lateinit var locationTextView: TextView
     private var selectedStartDate: String = ""
@@ -62,6 +64,7 @@ class TripRecordFragment : Fragment() {
         buttonAddImages = view.findViewById(R.id.buttonAddImages)
         viewPagerImages = view.findViewById(R.id.viewPagerImages) // ViewPager 초기화
         locationTextView = view.findViewById(R.id.locationTextView)
+        dateTextView = view.findViewById(R.id.textViewDates)
 
         tripRepository = TripRepository(requireContext())
 
@@ -106,7 +109,7 @@ class TripRecordFragment : Fragment() {
 
     private fun updateTripInfoUI() {
         // 여행 날짜 및 사진 정보 업데이트
-        buttonSelectDates.text = if (selectedStartDate.isNotEmpty() && selectedEndDate.isNotEmpty()) {
+        dateTextView.text = if (selectedStartDate.isNotEmpty() && selectedEndDate.isNotEmpty()) {
             "$selectedStartDate ~ $selectedEndDate"
         } else {
             "여행 날짜 선택하기"
@@ -162,7 +165,7 @@ class TripRecordFragment : Fragment() {
 
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
             selectedStartDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-            buttonSelectDates.text = "$selectedStartDate ~ 종료 날짜 선택"
+            dateTextView.text = "$selectedStartDate ~ 종료 날짜 선택"
             showEndDatePickerDialog()
         }, year, month, day).show()
     }
@@ -180,7 +183,7 @@ class TripRecordFragment : Fragment() {
                 Toast.makeText(requireContext(), "종료 날짜는 시작 날짜 이후여야 합니다.", Toast.LENGTH_SHORT).show()
             } else {
                 this.selectedEndDate = selectedEndDate
-                buttonSelectDates.text = "$selectedStartDate ~ $selectedEndDate"
+                dateTextView.text = "$selectedStartDate ~ $selectedEndDate"
             }
         }, year, month, day).show()
     }
@@ -263,7 +266,7 @@ class TripRecordFragment : Fragment() {
         // 추가 후, 입력 필드 초기화
         editTextTitle.text.clear()
         editTextDetails.text.clear()
-        buttonSelectDates.text = "날짜 선택하기"
+        dateTextView.text = ""
         tripRecord = null
         selectedLocation = null // 선택한 위치 초기화
         selectedImageUris.clear() // 선택한 이미지 URI 초기화
