@@ -39,12 +39,18 @@
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/buttonSelectDates"
             android:backgroundTint="@color/buttonColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
+            android:background="@drawable/round_btn"
             android:text="날짜 선택" />
     </LinearLayout>
 
@@ -61,6 +67,12 @@
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+
         <!-- 사진 추가 버튼 -->
         <Button
             android:id="@+id/buttonAddImages"
@@ -68,6 +80,7 @@
             android:layout_height="wrap_content"
             android:text="사진 추가"
             android:backgroundTint="@color/buttonColor"
+            android:background="@drawable/round_btn"
             android:textColor="@color/black"
             android:layout_marginBottom="16dp" />
     </LinearLayout>
@@ -92,13 +105,19 @@
             android:textSize="18sp"
             android:layout_marginBottom="8dp"/>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/buttonSelectLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/buttonColor"
+            android:background="@drawable/round_btn"
             android:text="여행지 선택하기"
-            android:textColor="@color/black"
-            android:backgroundTint="@color/buttonColor"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <TextView
@@ -135,5 +154,6 @@
         android:layout_height="wrap_content"
         android:text="작성하기"
         android:backgroundTint="@color/buttonColor"
+        android:background="@drawable/round_btn"
         android:textColor="@color/black" />
 </LinearLayout>

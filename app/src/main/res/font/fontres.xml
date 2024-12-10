@@ -5,10 +5,10 @@
 
     <!--regular-->
     <font
-        android:font="@font/defaultfont"
+        android:font="@font/pretendard"
         android:fontStyle="normal"
         android:fontWeight="400"
-        app:font="@font/defaultfont"
+        app:font="@font/pretendard"
         app:fontStyle="normal"
         app:fontWeight="500" />
 
