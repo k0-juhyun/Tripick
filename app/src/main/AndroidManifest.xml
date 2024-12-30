@@ -21,7 +21,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" /> <!-- API 키를 입력하세요 -->
+            android:value="api_key" /> <!-- API 키를 입력하세요 -->
 
         <activity
             android:name=".SplashActivity"
